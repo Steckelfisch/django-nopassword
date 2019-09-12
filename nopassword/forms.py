@@ -5,6 +5,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import resolve_url
 from django.utils.translation import ugettext_lazy as _
+from django.contrib import messages
 
 from nopassword import models
 
@@ -78,6 +79,8 @@ class LoginForm(forms.Form):
 
         if extra_context:
             context.update(extra_context)
+
+        messages.info(request, login_code.user.email)
 
         self.send_login_code(login_code, context)
 
