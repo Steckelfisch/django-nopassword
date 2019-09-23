@@ -45,6 +45,13 @@ class LoginForm(forms.Form):
                 code='inactive',
             )
 
+        if not user.email:
+            raise forms.ValidationError(
+                self.error_messages['invalid_username'],
+                code='invalid_username',
+                params={'username': self.username_field.verbose_name},
+            )
+
         self.cleaned_data['user'] = user
 
         return username
