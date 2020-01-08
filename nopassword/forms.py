@@ -82,6 +82,7 @@ class LoginForm(forms.Form):
             'site_name': site_name,
             'code': login_code.code,
             'url': url,
+            'user': login_code.user
         }
 
         if extra_context:
