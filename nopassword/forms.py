@@ -69,19 +69,10 @@ class LoginForm(forms.Form):
         else:
             site_name = domain = domain_override
 
-        url = '{}://{}{}?user={}&code={}'.format(
-            'https' if request.is_secure() else 'http',
-            domain,
-            resolve_url(login_code_url),
-            login_code.user.pk,
-            login_code.code,
-        )
-
         context = {
             'domain': domain,
             'site_name': site_name,
             'code': login_code.code,
-            'url': url,
             'user': login_code.user
         }
 
