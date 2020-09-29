@@ -6,6 +6,8 @@ from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import resolve_url
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
+from django.conf import settings
+
 
 from nopassword import models
 
@@ -73,7 +75,8 @@ class LoginForm(forms.Form):
             'domain': domain,
             'site_name': site_name,
             'code': login_code.code,
-            'user': login_code.user
+            'user': login_code.user,
+            'settings': settings
         }
 
         if extra_context:
