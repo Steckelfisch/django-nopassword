@@ -23,7 +23,8 @@ class LoginView(GenericAPIView):
     def post(self, request, *args, **kwargs):
         # Inject remote IP address into data
         data = request.data
-        # data['remote_ip'] = request.headers.get("X-Forwarded-For", "local-ip-used")
+        data['remote_ip'] = request.headers.get("X-Forwarded-For", "local-ip-used")
+        raise serializers.ValidationError(data['remote_ip'])
         data['remote_ip'] = '127.0.0.1'
 
         serializer = self.get_serializer(data=data)
