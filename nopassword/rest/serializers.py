@@ -27,7 +27,8 @@ class LoginSerializer(serializers.Serializer):
                 'remote_ip': '127.0.0.1',
             })
 
-            data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
+            # data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
+            data = urlopen('https://www.google.com/recaptcha/api/siteverify', params.encode('utf-8')).read()
             result = json.loads(data)
             success = result.get('success', None)
 
