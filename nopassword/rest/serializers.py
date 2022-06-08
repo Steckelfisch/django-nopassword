@@ -11,6 +11,7 @@ from nopassword import forms
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     recaptcha_token = serializers.CharField()
+    remote_ip = serializers.CharField()
     next = serializers.CharField(required=False, allow_null=True)
 
     form_class = forms.LoginForm
