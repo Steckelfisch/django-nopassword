@@ -19,7 +19,7 @@ class LoginSerializer(serializers.Serializer):
         # Validate reCaptcha
         URIReCaptcha = 'https://www.google.com/recaptcha/api/siteverify'
         private_recaptcha = '6Lec01MgAAAAACNe3aYAbruNVTk3BaWP39rN5wsf'
-        recaptcha_token = data['recaptchaToken']
+        recaptcha_token = data['recaptcha_token']
         remote_ip = '127.0.0.1'
         params = urlencode({
             'secret': private_recaptcha,
