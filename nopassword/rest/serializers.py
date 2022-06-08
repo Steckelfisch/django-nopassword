@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 from urllib.request import urlopen
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-
+from django.conf import settings
 from nopassword import forms
 
 
@@ -17,27 +17,24 @@ class LoginSerializer(serializers.Serializer):
 
     def validate(self, data):
         # Validate reCaptcha
-        URIReCaptcha = 'https://www.google.com/recaptcha/api/siteverify'
-        private_recaptcha = '6Lec01MgAAAAACNe3aYAbruNVTk3BaWP39rN5wsf'
-        recaptcha_token = data['recaptcha_token']
-        remote_ip = '127.0.0.1'
-        params = urlencode({
-            'secret': private_recaptcha,
-            'response': recaptcha_token,
-            'remote_ip': remote_ip,
-        })
+        if settings.RECAPTCHA_URI and settings.RECAPTCHA_PRIVATE:
+            params = urlencode({
+                'secret': settings.RECAPTCHA_PRIVATE,
+                'response': data['recaptcha_token'],
+                'remote_ip': data['remote_ip'],
+            })
 
-        data = urlopen(URIReCaptcha, params.encode('utf-8')).read()
-        result = json.loads(data)
-        success = result.get('success', None)
+            data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
+            result = json.loads(data)
+            success = result.get('success', None)
 
-        if not success:
-            raise serializers.ValidationError('Invalid reCaptcha')
-        else:
-            self.form = self.form_class(data=self.initial_data)
+            if not success:
+                raise serializers.ValidationError('Invalid reCaptcha')
 
-            if not self.form.is_valid():
-                raise serializers.ValidationError(self.form.errors)
+        self.form = self.form_class(data=self.initial_data)
+
+        if not self.form.is_valid():
+            raise serializers.ValidationError(self.form.errors)
 
         return self.form.cleaned_data
 

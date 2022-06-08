@@ -21,7 +21,11 @@ class LoginView(GenericAPIView):
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        # Inject remote IP address into data
+        data = request.data
+        data['remote_ip'] = request.headers.get("X-Forwarded-For", "local-ip-used")
+
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
