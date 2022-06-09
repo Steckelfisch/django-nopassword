@@ -30,11 +30,9 @@ class LoginSerializer(serializers.Serializer):
             success = result.get('success', None)
             score = float(result.get('score', None))
 
-            if not success:
+            if not success or score <= 0.25:
                 raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha'})
-            elif score > 0.25:
-                raise serializers.ValidationError({'recaptcha': 'Suspicious access attempt'})
-            elif score <= 0.5:
+            elif score > 0.5:
                 raise serializers.ValidationError({'recaptcha': 'Captcha validation required'})
 
         self.form = self.form_class(data=self.initial_data)
