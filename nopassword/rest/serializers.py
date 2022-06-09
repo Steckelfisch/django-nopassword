@@ -20,14 +20,12 @@ class LoginSerializer(serializers.Serializer):
         # Validate reCaptcha
         if settings.RECAPTCHA_URI and settings.RECAPTCHA_PRIVATE:
             params = urlencode({
-                # 'secret': settings.RECAPTCHA_PRIVATE,
-                'secret': '6Lec01MgAAAAACNe3aYAbruNVTk3BaWP39rN5wsf',
+                'secret': settings.RECAPTCHA_PRIVATE,
                 'response': data['recaptcha_token'],
                 'remote_ip': data['remote_ip'],
             })
 
-            # data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
-            data = urlopen('https://www.google.com/recaptcha/api/siteverify', params.encode('utf-8')).read()
+            data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
             result = json.loads(data)
             success = result.get('success', None)
 
