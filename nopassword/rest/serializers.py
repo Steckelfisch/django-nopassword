@@ -28,9 +28,15 @@ class LoginSerializer(serializers.Serializer):
             data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
             result = json.loads(data)
             success = result.get('success', None)
+            score = result.get('score', None)
+            raise serializers.ValidationError({'score': score})
 
             if not success:
                 raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha'})
+            elif score <= 0.25:
+                raise serializers.ValidationError({'recaptcha': 'Suspicious access attempt'})
+            elif score <= 0.5:
+                raise serializers.ValidationError({'recaptcha': 'Captcha validation required'})
 
         self.form = self.form_class(data=self.initial_data)
 
