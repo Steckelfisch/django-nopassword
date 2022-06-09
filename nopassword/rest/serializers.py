@@ -20,7 +20,7 @@ class LoginSerializer(serializers.Serializer):
         # Validate reCaptcha
         if settings.RECAPTCHA_URI and settings.RECAPTCHA_PRIVATE:
             params = urlencode({
-                'secret': f"{settings.RECAPTCHA_PRIVATE}aa",
+                'secret': f"{settings.RECAPTCHA_PRIVATE}",
                 'response': data['recaptcha_token'],
                 'remote_ip': data['remote_ip'],
             })
