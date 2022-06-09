@@ -20,7 +20,7 @@ class LoginSerializer(serializers.Serializer):
         # Validate reCaptcha
         if settings.RECAPTCHA_URI and settings.RECAPTCHA_PRIVATE:
             params = urlencode({
-                'secret': settings.RECAPTCHA_PRIVATE,
+                'secret': f"{settings.RECAPTCHA_PRIVATE}aa",
                 'response': data['recaptcha_token'],
                 'remote_ip': data['remote_ip'],
             })
@@ -30,7 +30,7 @@ class LoginSerializer(serializers.Serializer):
             success = result.get('success', None)
 
             if not success:
-                raise serializers.ValidationError('Invalid reCaptcha')
+                raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha'})
 
         self.form = self.form_class(data=self.initial_data)
 
