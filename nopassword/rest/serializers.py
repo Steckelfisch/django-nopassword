@@ -23,8 +23,7 @@ class LoginSerializer(serializers.Serializer):
                 # 'secret': settings.RECAPTCHA_PRIVATE,
                 'secret': '6Lec01MgAAAAACNe3aYAbruNVTk3BaWP39rN5wsf',
                 'response': data['recaptcha_token'],
-                # 'remote_ip': data['remote_ip'],
-                'remote_ip': '127.0.0.1',
+                'remote_ip': data['remote_ip'],
             })
 
             # data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
