@@ -28,7 +28,7 @@ class LoginSerializer(serializers.Serializer):
             data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
             result = json.loads(data)
             success = result.get('success', None)
-            score = result.get('score', None)
+            score = float(result.get('score', None))
             raise serializers.ValidationError({'score': score})
 
             if not success:
