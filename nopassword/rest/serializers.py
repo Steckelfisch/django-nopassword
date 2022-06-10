@@ -27,8 +27,8 @@ class LoginSerializer(serializers.Serializer):
                 'remote_ip': data['remote_ip'],
             })
 
-            data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
-            result = json.loads(data)
+            recaptcha_data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
+            result = json.loads(recaptcha_data)
             success = result.get('success', None)
             score = float(result.get('score', None))
 
