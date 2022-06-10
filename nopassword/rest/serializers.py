@@ -31,7 +31,7 @@ class LoginSerializer(serializers.Serializer):
             result = json.loads(recaptcha_data)
             success = result.get('success', None)
             score = float(result.get('score', None))
-            raise serializers.ValidationError({'recaptcha': __name__})
+            
             if not success:
                 logger.error(f"reCaptcha ERROR: {', '.join(result.get('error-codes', []))}")
                 raise serializers.ValidationError({'recaptcha': 'Error while validating reCaptcha'})
