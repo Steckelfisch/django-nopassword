@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
 from urllib.parse import urlencode
 from urllib.request import urlopen
 from rest_framework import serializers
@@ -7,6 +8,7 @@ from rest_framework.authtoken.models import Token
 from django.conf import settings
 from nopassword import forms
 
+logger = logging.getLogger(__name__)
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
@@ -30,10 +32,12 @@ class LoginSerializer(serializers.Serializer):
             success = result.get('success', None)
             score = float(result.get('score', None))
 
-            if not success or score <= 0.25:
-                raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha'})
+            if not success:
+                logger.error(f"reCaptcha ERROR: {', '.join(result.get('error-codes', []))}")
+                raise serializers.ValidationError({'recaptcha': 'Error while validating reCaptcha'})
             elif score > 0.5:
-                raise serializers.ValidationError({'recaptcha': 'Captcha validation required'})
+                logger.warning(f"reCaptcha suspicious activity for user {data['username']}, score: {score}")
+                raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha'})
 
         self.form = self.form_class(data=self.initial_data)
 
