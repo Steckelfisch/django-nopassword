@@ -37,7 +37,7 @@ class LoginSerializer(serializers.Serializer):
                 raise serializers.ValidationError({'recaptcha': 'Error while validating reCaptcha'})
             elif score <= 0.5:
                 logger.info(f"reCaptcha suspicious activity for user {data['username']}, score: {score}")
-                raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha NEW'})
+                raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha'})
 
         self.form = self.form_class(data=self.initial_data)
 
