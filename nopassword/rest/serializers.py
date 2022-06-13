@@ -33,9 +33,11 @@ class LoginSerializer(serializers.Serializer):
             score = float(result.get('score', None))
 
             if not success:
+                print(f"reCaptcha ERROR: {', '.join(result.get('error-codes', []))}")
                 logger.info(f"reCaptcha ERROR: {', '.join(result.get('error-codes', []))}")
                 raise serializers.ValidationError({'recaptcha': 'Error while validating reCaptcha'})
             elif score > 0.5:
+                print(f"reCaptcha suspicious activity for user {data['username']}, score: {score}")
                 logger.info(f"reCaptcha suspicious activity for user {data['username']}, score: {score}")
                 raise serializers.ValidationError({'recaptcha': 'Invalid reCaptcha'})
 
