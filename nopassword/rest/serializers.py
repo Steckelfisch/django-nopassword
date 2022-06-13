@@ -30,7 +30,7 @@ class LoginSerializer(serializers.Serializer):
             recaptcha_data = urlopen(settings.RECAPTCHA_URI, params.encode('utf-8')).read()
             result = json.loads(recaptcha_data)
             success = result.get('success', None)
-            score = float(result.get('score', None))
+            score = float(result.get('score', 0))
 
             if not success:
                 print(f"reCaptcha ERROR: {', '.join(result.get('error-codes', []))}")
