@@ -8,7 +8,7 @@ from rest_framework.authtoken.models import Token
 from django.conf import settings
 from nopassword import forms
 
-logger = logging.getLogger('nopassword')
+logger = logging.getLogger(__name__)
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
