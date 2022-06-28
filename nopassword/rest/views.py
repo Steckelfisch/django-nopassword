@@ -12,7 +12,7 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from refreshtoken.models import RefreshToken
 from nopassword.rest import serializers
 
 
@@ -42,6 +42,7 @@ class LoginCodeView(GenericAPIView):
     serializer_class = serializers.LoginCodeSerializer
     token_serializer_class = serializers.TokenSerializer
     token_model = Token
+    refresh_token_model = RefreshToken
 
     def process_login(self):
         django_login(self.request, self.user)
@@ -49,6 +50,7 @@ class LoginCodeView(GenericAPIView):
     def login(self):
         self.user = self.serializer.validated_data['user']
         self.token, created = self.token_model.objects.get_or_create(user=self.user)
+        self.refresh_token = self.refresh_token_model.object.get_or_create(user=self.user, app=self.app)
 
         if getattr(settings, 'REST_SESSION_LOGIN', True):
             self.process_login()

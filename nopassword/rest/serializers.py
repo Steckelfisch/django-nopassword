@@ -71,6 +71,7 @@ class LoginCodeSerializer(serializers.Serializer):
 
 
 class TokenSerializer(serializers.ModelSerializer):
+    refresh_token = serializers.CharField
 
     class Meta:
         model = Token
