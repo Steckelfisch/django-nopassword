@@ -7,12 +7,11 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
 from rest_framework import status
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from refreshtoken.models import RefreshToken
 from nopassword.rest import serializers
 
 
@@ -40,28 +39,23 @@ class LoginView(GenericAPIView):
 class LoginCodeView(GenericAPIView):
     permission_classes = (AllowAny,)
     serializer_class = serializers.LoginCodeSerializer
-    token_serializer_class = serializers.TokenSerializer
-    token_model = Token
-    refresh_token_model = RefreshToken
 
     def process_login(self):
         django_login(self.request, self.user)
 
     def login(self):
         self.user = self.serializer.validated_data['user']
-        self.token, created = self.token_model.objects.get_or_create(user=self.user)
-        self.refresh_token = self.refresh_token_model.object.get_or_create(user=self.user, app=self.app)
+        self.tokens = RefreshToken.for_user(self.user)
 
         if getattr(settings, 'REST_SESSION_LOGIN', True):
             self.process_login()
 
     def get_response(self):
-        token_serializer = self.token_serializer_class(
-            instance=self.token,
-            context=self.get_serializer_context(),
-        )
-        data = token_serializer.data
-        data['next'] = self.serializer.validated_data['user'].login_code.next
+        data = {
+            'access_token': str(self.tokens.access_token),
+            'refresh_token': str(self.tokens),
+            'next': self.serializer.validated_data['user'].login_code.next,
+        }
         return Response(data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
