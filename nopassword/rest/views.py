@@ -52,8 +52,8 @@ class LoginCodeView(GenericAPIView):
 
     def get_response(self):
         data = {
-            'access_token': str(self.tokens.access_token),
-            'refresh_token': str(self.tokens),
+            'access': str(self.tokens.access_token),
+            'refresh': str(self.tokens),
             'next': self.serializer.validated_data['user'].login_code.next,
         }
         return Response(data, status=status.HTTP_200_OK)
