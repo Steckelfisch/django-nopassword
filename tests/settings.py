@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
 
     'rest_framework',
-    'rest_framework.authtoken',
     'rest_framework_simplejwt',
 
     'nopassword',
