@@ -20,6 +20,7 @@ Add the app to installed apps
 INSTALLED_APPS = (
     ...
     'nopassword',
+    'rest_framework_simplejwt',
     ...
 )
 ```
@@ -95,6 +96,8 @@ You will have the following endpoints available:
   - Returns `key` (authentication token) and `next` (provided by `/api/accounts/login/`)
 - `/api/accounts/logout/` (POST)
   - Performs logout
+
+You will need to implement the endpoint to refresh the token on your application.
 
 ### Settings
 Information about the available settings can be found in the [docs](http://django-nopassword.readthedocs.org/en/latest/#settings)
