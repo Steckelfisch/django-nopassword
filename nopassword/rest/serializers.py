@@ -71,7 +71,6 @@ class LoginCodeSerializer(serializers.Serializer):
 
 
 class TokenSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Token
         fields = ('key',)
