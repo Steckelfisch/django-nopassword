@@ -35,29 +35,29 @@ class LoginForm(forms.Form):
             user = get_user_model()._default_manager.get_by_natural_key(username)
         except get_user_model().DoesNotExist:
             # Don't show an error message here as we don't want potential hackers to know if the email address is in our database or not
-            user = None
-
-        if user:
-            if not user.is_active:
-                raise forms.ValidationError(
-                    self.error_messages['inactive'],
-                    code='inactive',
-                )
-
-            if not user.email:
-                raise forms.ValidationError(
-                    self.error_messages['invalid_username'],
-                    code='invalid_username',
-                    params={'username': self.username_field.verbose_name},
-                )
-
-            self.cleaned_data['user'] = user
-
             return username
 
-        return None
+        if not user.is_active:
+            raise forms.ValidationError(
+                self.error_messages['inactive'],
+                code='inactive',
+            )
+
+        if not user.email:
+            raise forms.ValidationError(
+                self.error_messages['invalid_username'],
+                code='invalid_username',
+                params={'username': self.username_field.verbose_name},
+            )
+
+        self.cleaned_data['user'] = user
+
+        return username
 
     def save(self, request, login_code_url='login_code', domain_override=None, extra_context=None):
+        if not self.cleaned_data['user']:
+            return ""
+
         login_code = models.LoginCode.create_code_for_user(
             user=self.cleaned_data['user'],
             next=self.cleaned_data['next'],
