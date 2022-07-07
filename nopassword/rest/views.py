@@ -26,8 +26,8 @@ class LoginView(GenericAPIView):
         data['remote_ip'] = request.headers.get("X-Forwarded-For", local_ip_used)
 
         serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
 
         return Response(
             {"detail": _("Login code has been sent.")},

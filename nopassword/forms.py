@@ -53,7 +53,9 @@ class LoginForm(forms.Form):
 
             self.cleaned_data['user'] = user
 
-        return username
+            return username
+
+        return None
 
     def save(self, request, login_code_url='login_code', domain_override=None, extra_context=None):
         login_code = models.LoginCode.create_code_for_user(
