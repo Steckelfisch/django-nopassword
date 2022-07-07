@@ -35,7 +35,7 @@ class LoginForm(forms.Form):
             user = get_user_model()._default_manager.get_by_natural_key(username)
         except get_user_model().DoesNotExist:
             # Don't show an error message here as we don't want potential hackers to know if the email address is in our database or not
-            pass
+            user = None
 
         if user:
             if not user.is_active:
