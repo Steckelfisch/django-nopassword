@@ -3,7 +3,6 @@ from django import forms
 from django.contrib.auth import authenticate, get_backends, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ImproperlyConfigured
-from django.shortcuts import resolve_url
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.conf import settings
@@ -38,20 +37,21 @@ class LoginForm(forms.Form):
             # Don't show an error message here as we don't want potential hackers to know if the email address is in our database or not
             pass
 
-        if not user.is_active:
-            raise forms.ValidationError(
-                self.error_messages['inactive'],
-                code='inactive',
-            )
+        if user:
+            if not user.is_active:
+                raise forms.ValidationError(
+                    self.error_messages['inactive'],
+                    code='inactive',
+                )
 
-        if not user.email:
-            raise forms.ValidationError(
-                self.error_messages['invalid_username'],
-                code='invalid_username',
-                params={'username': self.username_field.verbose_name},
-            )
+            if not user.email:
+                raise forms.ValidationError(
+                    self.error_messages['invalid_username'],
+                    code='invalid_username',
+                    params={'username': self.username_field.verbose_name},
+                )
 
-        self.cleaned_data['user'] = user
+            self.cleaned_data['user'] = user
 
         return username
 
