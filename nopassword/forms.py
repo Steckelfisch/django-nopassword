@@ -35,11 +35,8 @@ class LoginForm(forms.Form):
         try:
             user = get_user_model()._default_manager.get_by_natural_key(username)
         except get_user_model().DoesNotExist:
-            raise forms.ValidationError(
-                self.error_messages['invalid_username'],
-                code='invalid_username',
-                params={'username': self.username_field.verbose_name},
-            )
+            # Don't show an error message here as we don't want potential hackers to know if the email address is in our database or not
+            pass
 
         if not user.is_active:
             raise forms.ValidationError(
