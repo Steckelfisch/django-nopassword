@@ -29,11 +29,11 @@ class LoginView(GenericAPIView):
             serializer = self.get_serializer(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-
-        return Response(
-            {"detail": _("Login code has been sent.")},
-            status=status.HTTP_200_OK
-        )
+        finally:
+            return Response(
+                {"detail": _("Login code has been sent.")},
+                status=status.HTTP_200_OK
+            )
 
 
 @method_decorator(sensitive_post_parameters('code'), 'dispatch')
