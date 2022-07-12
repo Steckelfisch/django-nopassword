@@ -1,7 +1,4 @@
-import logging
 from rest_framework.exceptions import PermissionDenied
-
-logger = logging.getLogger(__name__)
 
 
 class UserNotValid(PermissionDenied):
