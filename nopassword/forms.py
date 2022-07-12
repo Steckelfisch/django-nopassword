@@ -3,13 +3,13 @@ from django import forms
 from django.contrib.auth import authenticate, get_backends, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ImproperlyConfigured
-from django.shortcuts import resolve_url
 from django.utils.translation import ugettext_lazy as _
 from django.contrib import messages
 from django.conf import settings
 
 
 from nopassword import models
+from nopassword.rest.exceptions import UserNotValid
 
 
 class LoginForm(forms.Form):
@@ -35,11 +35,8 @@ class LoginForm(forms.Form):
         try:
             user = get_user_model()._default_manager.get_by_natural_key(username)
         except get_user_model().DoesNotExist:
-            raise forms.ValidationError(
-                self.error_messages['invalid_username'],
-                code='invalid_username',
-                params={'username': self.username_field.verbose_name},
-            )
+            # Don't show an error message here as we don't want potential hackers to know if the email address is in our database or not
+            return username
 
         if not user.is_active:
             raise forms.ValidationError(
@@ -59,6 +56,9 @@ class LoginForm(forms.Form):
         return username
 
     def save(self, request, login_code_url='login_code', domain_override=None, extra_context=None):
+        if 'user' not in self.cleaned_data:
+            raise UserNotValid(detail='No user found')
+
         login_code = models.LoginCode.create_code_for_user(
             user=self.cleaned_data['user'],
             next=self.cleaned_data['next'],
