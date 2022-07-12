@@ -9,6 +9,7 @@ from django.conf import settings
 
 
 from nopassword import models
+from nopassword.rest.exceptions import UserNotValid
 
 
 class LoginForm(forms.Form):
@@ -56,7 +57,7 @@ class LoginForm(forms.Form):
 
     def save(self, request, login_code_url='login_code', domain_override=None, extra_context=None):
         if 'user' not in self.cleaned_data:
-            raise Exception('No user found')
+            raise UserNotValid(detail='No user found')
 
         login_code = models.LoginCode.create_code_for_user(
             user=self.cleaned_data['user'],

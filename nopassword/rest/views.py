@@ -13,6 +13,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from nopassword.rest import serializers
+from nopassword.rest.exceptions import UserNotValid
 
 
 class LoginView(GenericAPIView):
@@ -29,11 +30,14 @@ class LoginView(GenericAPIView):
             serializer = self.get_serializer(data=data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-        finally:
-            return Response(
-                {"detail": _("Login code has been sent.")},
-                status=status.HTTP_200_OK
-            )
+        except UserNotValid:
+            # We ignore this type of exceptions
+            pass
+
+        return Response(
+            {"detail": _("Login code has been sent.")},
+            status=status.HTTP_200_OK
+        )
 
 
 @method_decorator(sensitive_post_parameters('code'), 'dispatch')
