@@ -56,7 +56,7 @@ class LoginForm(forms.Form):
 
     def save(self, request, login_code_url='login_code', domain_override=None, extra_context=None):
         if 'user' not in self.cleaned_data:
-            return ""
+            raise Exception('No user found')
 
         login_code = models.LoginCode.create_code_for_user(
             user=self.cleaned_data['user'],
