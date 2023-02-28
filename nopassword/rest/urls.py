@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from django.conf.urls import url
+from django.urls import include, re_path
 
 from nopassword.rest import views
 
 urlpatterns = [
-    url('login/code', views.LoginCodeView.as_view(), name='rest_login_code'),
-    url('login', views.LoginView.as_view(), name='rest_login'),
-    url('logout', views.LogoutView.as_view(), name='rest_logout'),
+    re_path('login/code', views.LoginCodeView.as_view(), name='rest_login_code'),
+    re_path('login', views.LoginView.as_view(), name='rest_login'),
+    re_path('logout', views.LogoutView.as_view(), name='rest_logout'),
 ]
