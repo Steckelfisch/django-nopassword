@@ -76,6 +76,7 @@ class LoginForm(forms.Form):
             'site_name': site_name,
             'code': login_code.code,
             'user': login_code.user,
+            'next': login_code.next,
             'settings': settings
         }
 
